@@ -10,6 +10,14 @@ function handleHelp(): string
     $help = <<<HELP
 Доступные команды
 help - вывод данной подсказки
+init - инициализация структуры БД
+seed - внесение данных в таблицу БД
+add-post-db - добавить пост в БД
+read-all-db - прочитать все посты из БД
+read-post-db id - прочитать пост из БД по айди
+search-post-db searchWorld - найти пост(-ы) по поисковому слову
+delete-post-db id - удалить пост из бд по айди 
+clear-posts-db - удалить все посты из бд
 add-post - создать новый пост
 read-all-posts - прочитать все посты
 read-post id - прочитать пост по айди

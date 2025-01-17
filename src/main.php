@@ -24,6 +24,14 @@ function parseCommand(): string
         'search-post' => 'searchPost',
         'delete-post' => 'deletePost',
         'clear-posts' => 'clearPosts',
+        'init' => 'initDB',
+        'seed' => 'seedDB',
+        'add-post-db' => 'addPostDB',
+        'read-post-db' => 'readPostDB',
+        'read-all-db' => 'readAllPostsDB',
+        'search-post-db' => 'searchPostDB',
+        'delete-post-db' => 'deletePostDB',
+        'clear-posts-db' => 'clearPostsDB',
         default => 'handleHelp'
     };
 

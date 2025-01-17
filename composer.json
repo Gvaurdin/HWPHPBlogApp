@@ -5,14 +5,19 @@
             "name": "GSA"
         }
     ],
-    "require": {},
+    "require": {
+        "ext-readline": "*",
+        "ext-pdo": "*"
+    },
     "autoload": {
         "files": [
             "src/blog.php",
             "src/helpers.php",
             "src/main.php",
             "config/config.php",
-            "utils/utils.php"
+            "utils/utils.php",
+            "src/db.php",
+            "src/blogDB.php"
         ]
     }
 }
