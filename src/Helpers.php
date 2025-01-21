@@ -1,13 +1,18 @@
 <?php
 
-function errorHandle(string $error) : string
-{
-    throw new InvalidArgumentException("\033[31m" . $error . "\r\n \033[97m");
-}
+namespace App\Blog;
 
-function handleHelp(): string
-{
-    $help = <<<HELP
+use InvalidArgumentException;
+
+class Helpers{
+    public static function errorHandle(string $error) : string
+    {
+        throw new InvalidArgumentException("\033[31m" . $error . "\r\n \033[97m");
+    }
+
+    public static function handleHelp(): string
+    {
+        return <<<HELP
 Доступные команды
 help - вывод данной подсказки
 init - инициализация структуры БД
@@ -25,6 +30,6 @@ search-post searchWorld - найти пост по поисковому слов
 delete-post id - удалить пост по айди
 clear-posts - удалить все посты
 HELP;
-    return $help;
 
+    }
 }
