@@ -78,6 +78,13 @@ class Config
     {
         return getConfig('paths', 'indexes_dir');
     }
+
+    static function getDatabasePath(): string
+    {
+        $dbDir = getConfig('paths', 'db_path');
+        $dbFile = getConfig('file_naming', 'dbFile', 'database.db');
+        return $dbDir . DIRECTORY_SEPARATOR . $dbFile;
+    }
 }
 
 function getConfig(string $section, string $key, string $default = null) : string

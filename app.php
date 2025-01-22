@@ -24,18 +24,35 @@ require "vendor/autoload.php";
 use App\Blog\core\Db;
 use App\Blog\model\Post;
 use App\Blog\model\User;
+//--------------------------------------------
+//$db = new Db();
+//$post = new Post($db);
+//$user = new User($db);
+//
+//echo $user->getOne(3) . PHP_EOL;
+//echo $post->getAll() . PHP_EOL;
+//--------------------------------------------
 
-$db = new Db();
-$post = new Post($db);
-$user = new User($db);
 
-echo $user->getOne(3) . PHP_EOL;
-echo $post->getAll() . PHP_EOL;
+$user = new User("Mike","Tyson");
 
+$user->test();
+
+$user->insert();
+
+print_r($user);
+
+$user = User::getOne(1);
+
+print_r((new User())->getAll());
+
+
+
+//------------------------------------------------------------------------------------
 // запрос с условием
-echo $user->query()->where('name','John')->get() . PHP_EOL;
+//echo $user->query()->where('name','John')->get() . PHP_EOL;
 // запрос с цепочкой условий
-echo $user->query()->where('name','John')->where('id_userType',1)->get() . PHP_EOL;
+//echo $user->query()->where('name','John')->where('id_userType',1)->get() . PHP_EOL;
 
 // подключили библиотеку faker через composer
 //$faker = Faker\Factory::create('ru_Ru');
