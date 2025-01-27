@@ -6,7 +6,8 @@
 
 
 
-require "vendor/autoload.php";
+require __DIR__ . '/../vendor/autoload.php';
+
 //----------------------------------------BlogApp----------------------------------------------------------
 //use App\Blog\Main as Main;
 //
@@ -40,11 +41,15 @@ $user->test();
 
 $user->insert();
 
+$user->name = "Kirk";
+$user->surname = 'Hemmet';
+$user->update();
+
 print_r($user);
 
 $user = User::getOne(1);
 
-print_r((new User())->getAll());
+print_r($user->getAll());
 
 
 

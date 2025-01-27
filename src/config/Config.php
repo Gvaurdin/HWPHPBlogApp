@@ -2,6 +2,7 @@
 
 namespace App\Blog\config;
 
+use App\Blog\Helpers;
 /**
  * Возвращает значение из конфигурации.
  *
@@ -81,10 +82,21 @@ class Config
 
     static function getDatabasePath(): string
     {
-        $dbDir = getConfig('paths', 'db_path');
+        //абсолютный путь к корню проекта относительно текущего файла
+        $projectRoot = dirname(__DIR__,2); // два уровня выше от директории config
+        $dbDir = $projectRoot . DIRECTORY_SEPARATOR . getConfig('paths', 'db_path');
         $dbFile = getConfig('file_naming', 'dbFile', 'database.db');
-        return $dbDir . DIRECTORY_SEPARATOR . $dbFile;
+        // Преобразуем путь в абсолютный
+
+        $fullPath = $dbDir . DIRECTORY_SEPARATOR . $dbFile;
+
+        if (!$fullPath) {
+            Helpers::errorHandle("Файл базы данных не найден: {$dbDir}" . DIRECTORY_SEPARATOR . "{$dbFile}");
+        }
+
+        return $fullPath;
     }
+
 }
 
 function getConfig(string $section, string $key, string $default = null) : string
@@ -95,13 +107,13 @@ function getConfig(string $section, string $key, string $default = null) : strin
     if (is_null($config)) {
         $configPath = __DIR__ . '/config.ini';
         if (!file_exists($configPath)) {
-            errorHandle("Файл конфигурации не найден: {$configPath}");
+            Helpers::errorHandle("Файл конфигурации не найден: {$configPath}");
         }
 
         // INI_SCANNER_TYPED - режим типизированного сканирования файла .ini
         $config = parse_ini_file($configPath,true,INI_SCANNER_TYPED);
         if(!$config) {
-            errorHandle("Не удалось загрузить файл конфигурации: {$configPath}");
+            Helpers::errorHandle("Не удалось загрузить файл конфигурации: {$configPath}");
         }
     }
 
@@ -110,7 +122,7 @@ function getConfig(string $section, string $key, string $default = null) : strin
         if($default !== null) {
             return $default;
         }
-        errorHandle("Секция {$section} не найдена в конфигурации");
+        Helpers::errorHandle("Секция {$section} не найдена в конфигурации");
     }
 
     //проверяем наличие ключа
@@ -118,7 +130,7 @@ function getConfig(string $section, string $key, string $default = null) : strin
         if($default !== null) {
             return $default;
         }
-        errorHandle("Ключ {$key} не найден в секции {$section}");
+        Helpers::errorHandle("Ключ {$key} не найден в секции {$section}");
     }
 
     return $config[$section][$key];

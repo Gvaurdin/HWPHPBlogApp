@@ -13,9 +13,5 @@ services:
         working_dir: /BlogApp
         volumes:
             - '.:/BlogApp'
-            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/fpm/conf.d/99-overrides.ini'
-            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.4/cli/conf.d/99-overrides.ini'
-        extra_hosts:
-            - "host.docker.internal:host-gateway"
-        environment:
-            PHP_IDE_CONFIG: "serverName=docker-debug"
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.1/fpm/conf.d/99-overrides.ini'
+            - './phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/8.1/cli/conf.d/99-overrides.ini'

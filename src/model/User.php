@@ -6,9 +6,18 @@ use App\Blog\core\Db;
 
 class User extends Model
 {
-    public ?int $id;
-    public ?string $name;
-    public ?string $surname;
+    protected ?int $id;
+    protected ?string $name;
+    protected ?string $surname;
+
+    protected ?int $id_userType;
+
+    protected $props =[
+        'id' => false,
+        'name' => false,
+        'surname' => false,
+        'id_userType' => false,
+    ];
 
     public function __construct(string $name = null, string $surname = null)
     {
@@ -16,6 +25,7 @@ class User extends Model
         $this->surname = $surname;
     }
 
+    //с помощью функции test мы получаем список публичных полей класса
     public function test()
     {
         foreach ($this as $key => $value) {

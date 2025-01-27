@@ -32,6 +32,8 @@ class Db
     }
 
     //select where id=:id, ['id' =>1]
+
+    //выполняет запрос с параметрами
     private function query(string $sql, array $params = []): false|\PDOStatement
     {
         $pdoStatement = $this->getConnection()->prepare($sql);
@@ -39,11 +41,13 @@ class Db
         return $pdoStatement;
     }
 
+    //используется для получения идентификатора (ID) последней записи
     public function lastInsertId() : int
     {
         return $this->getConnection()->lastInsertId();
     }
 
+    //выполняет команды (вставка, удаление, обновление).
     public function execute(string $sql, array $params = []): \PDOStatement
     {
         return $this->query($sql, $params);

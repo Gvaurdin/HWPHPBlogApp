@@ -8,7 +8,7 @@ class Comment extends Model
     public string $commentText;
     public int $postId;
     public int $userId;
-    protected function getTableName(): string
+    protected static function getTableName(): string
     {
         return 'Comments';
     }

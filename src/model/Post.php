@@ -6,11 +6,16 @@ use App\Blog\core\Db;
 
 class Post extends Model
 {
-    public int $id;
-    public string $title;
-    public string $text;
+    protected int $id;
+    protected string $title;
+    protected string $text;
+    protected $props =[
+        'id' => false,
+        'title' => false,
+        'text' => false,
+    ];
 
-    protected function getTableName(): string
+    protected static function getTableName(): string
     {
         return "POSTS";
     }

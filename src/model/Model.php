@@ -3,90 +3,28 @@
 
 namespace App\Blog\model;
 
-//TODO 2* Реализовать универсальный insert для всех моделей
-use App\Blog\core\Db;
-use App\Blog\interfaces\IModel;
+use App\Blog\Helpers;
 
-abstract class Model implements IModel
+abstract class Model extends DbModel
 {
-    protected Db $db;
-    abstract static protected function getTableName(): string;
 
-//    private array $queryConditions = []; // массив условий запроса
-
-//    public function __construct()
-//    {
-//        $this->db = DB::getInstance();
-//    }
-
-    public function query()
+    public function __get(string $name): mixed
     {
-        $this->queryConditions = []; // очищаем массив условий
-        return $this;
-    }
-
-    public function where(string $column, string $value): static
-    {
-        $this->queryConditions[] = "$column = '$value'";
-        return $this; // возвращаем текущий объект для построения цепочек
-    }
-
-    public function get()
-    {
-        $tableName = static::getTableName();
-        // соединяем условия через AND
-        $conditions = implode(' AND ', $this->queryConditions);
-        $sql = "SELECT * FROM {$tableName}";
-        //если есть условия - добавляем в запрос
-        if(!empty($conditions))
+        if(!array_key_exists($name, $this->props) || !$this->props[$name])
         {
-            $sql .= " WHERE {$conditions}";
+            Helpers::errorHandle("Нельзя читать значение поля '{$name}'");
         }
-
-        //выполняем запрос и возвращаем результат
-        return $this->db->queryAll($sql);
+        return $this->$name;
     }
 
-    public static function getOne(int $id)
+    public function __set(string $name,$value): void
     {
-        $table = static::getTableName();
-        $sql = "select * from $table where id = :id" . PHP_EOL;
-        return Db::getInstance()->queryOneObject($sql, ['id' => $id],static::class);
-
-    }
-
-    public function getAll()
-    {
-        $sql = "SELECT * FROM {$this->getTableName()}" . PHP_EOL;
-        return Db::getInstance()->queryAll($sql);
-    }
-
-    public function insert(): Model
-    {
-        $tableName = static::getTableName();
-        $fields = [];
-        $placeholders = [];
-        $values = [];
-
-        foreach ($this as $field => $value)
+        if(!array_key_exists($name, $this->props))
         {
-            //пропускаем поле айди и нулл значения
-            if($field !== 'id' && $value !== null )
-            {
-                $fields[] = $field;
-                $placeholders[] = '?';
-                $values[] = $value;
-            }
+            Helpers::errorHandle("Нельзя писать в поле '{$name}'");
         }
-
-        $fieldsString = implode(', ', $fields);
-        $placeholdersString = implode(', ', $placeholders);
-        $sql = "insert into $tableName ($fieldsString) values ($placeholdersString)";
-
-        Db::getInstance()->execute($sql, $values);
-
-        $this->id = Db::getInstance()->lastInsertId();
-        return $this;
+        $this->$name = $value;
+        $this->props[$name] = true;
     }
 
 }
