@@ -20,9 +20,9 @@ Class DB
     title varchar(50) NOT NULL,
     text TEXT NOT NULL,
     id_user INTEGER,
-    foreign key (id_user) references Users(id) on delete cascade on update cascade
+    foreign key (id_user) references UsersController(id) on delete cascade on update cascade
     );");
-        $db->query("CREATE TABLE IF NOT EXISTS Users (
+        $db->query("CREATE TABLE IF NOT EXISTS UsersController (
     id INTEGER PRIMARY key AUTOINCREMENT unique,
     name varchar(50) NOT NULL,
     surname varchar(50) NOT NULL,
@@ -40,9 +40,9 @@ Class DB
 //    $db->query("INSERT INTO UserTypes (userCategory) VALUES('User');");
 //    $db->query("INSERT INTO UserTypes (userCategory) VALUES('Admin');");
 //
-//    $db->query("INSERT INTO Users (name, surname, id_userType) VALUES ('John', 'Gordon',1);");
-//    $db->query("INSERT INTO Users (name, surname, id_userType) VALUES ('Maria', 'Shark',2);");
-//    $db->query("INSERT INTO Users (name, surname, id_userType) VALUES ('Mike', 'Johnson',1);");
+//    $db->query("INSERT INTO UsersController (name, surname, id_userType) VALUES ('John', 'Gordon',1);");
+//    $db->query("INSERT INTO UsersController (name, surname, id_userType) VALUES ('Maria', 'Shark',2);");
+//    $db->query("INSERT INTO UsersController (name, surname, id_userType) VALUES ('Mike', 'Johnson',1);");
 //
 //    $db->query("INSERT INTO POSTS (title,text,id_user) VALUES ('Sport football', 'This post about sport', 1);");
 //    $db->query("INSERT INTO POSTS (title,text,id_user) VALUES ('News world', 'This post about news of world',3);");
@@ -85,11 +85,11 @@ Class DB
         }
 
         foreach ($users as $user) {
-            $stmt = $db->prepare("SELECT COUNT(*) FROM Users WHERE name = :name AND surname = :surname AND id_userType = :id_userType");
+            $stmt = $db->prepare("SELECT COUNT(*) FROM UsersController WHERE name = :name AND surname = :surname AND id_userType = :id_userType");
             $stmt->execute($user);
             if ($stmt->fetchColumn() == 0) {
                 $insert = $db->prepare(
-                    "INSERT INTO Users (name, surname, id_userType) VALUES (:name, :surname, :id_userType)"
+                    "INSERT INTO UsersController (name, surname, id_userType) VALUES (:name, :surname, :id_userType)"
                 );
                 $insert->execute($user);
             }

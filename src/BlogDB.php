@@ -34,7 +34,7 @@ class BlogDB
             $userTypeID = $userType["id"];
 
             //создаем юзера
-            $stmt = $db->prepare("insert into Users (name,surname,id_userType) 
+            $stmt = $db->prepare("insert into UsersController (name,surname,id_userType) 
                                 values (:name, :surname, :id_userType)");
             $stmt->execute([
                 'name' => $nameAuthor,
@@ -78,7 +78,7 @@ class BlogDB
                                   u.name as user_name,
                                   u.surname as user_surname
                               FROM posts p
-                              INNER JOIN Users u
+                              INNER JOIN UsersController u
                               ON p.id_user = u.id");
         $result = $stmt->fetchAll();
 
@@ -105,7 +105,7 @@ class BlogDB
                               u.name AS user_name,
                               u.surname AS user_surname 
                                FROM posts p
-                               INNER JOIN Users u
+                               INNER JOIN UsersController u
                                ON p.id_user = u.id
                                WHERE p.id = :id");
         $stmt->execute(["id" => $id]);
@@ -129,7 +129,7 @@ class BlogDB
                                     u.name as user_name,
                                     u.surname as user_surname
                                 from posts p
-                                inner join Users u
+                                inner join UsersController u
                                 on p.id_user = u.id
                                 where p.title LIKE :search OR p.text LIKE :search");
         //привязываем параметр поиска, добавляем % для поиска подстроки

@@ -1,64 +1,51 @@
 <?php
 
-//require_once 'src/blog.php';
-//require_once 'src/helpers.php';
-//require_once 'src/main.php';
-
-
+use App\Blog\controllers\HomeController as HomeController;
+use App\Blog\controllers\PostsController as PostsController;
+use App\Blog\controllers\UsersController as UsersController;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-//----------------------------------------BlogApp----------------------------------------------------------
-//use App\Blog\Main as Main;
+//$request = trim($_SERVER['REQUEST_URI'], '/');
+//
+//switch ($request)
+//{
+//    case '':
+//        $homeController = new HomeController();
+//        $homeController->index();
+//        break;
+//        case 'posts':
+//            $postsController = new PostsController();
+//            $postsController->index();
+//            break;
+//            case 'users':
+//                $usersController = new UsersController();
+//                $usersController->index();
+//                break;
+//                default:
+//                    http_response_code(404);
+//                    echo 'Page not found';
+//                    break;
 //
 //
-//try {
-//    $result = Main::main();
-//    echo $result . PHP_EOL;
-//} catch (PDOException $pe) {
-//    echo $pe->getMessage() . PHP_EOL;
-//} catch (Exception $e){
-//    echo $e->getMessage() . PHP_EOL;
 //}
-//----------------------------------------------------------------------------------------------------------
 
-use App\Blog\core\Db;
-use App\Blog\model\Post;
-use App\Blog\model\User;
-//--------------------------------------------
-//$db = new Db();
-//$post = new Post($db);
-//$user = new User($db);
-//
-//echo $user->getOne(3) . PHP_EOL;
-//echo $post->getAll() . PHP_EOL;
-//--------------------------------------------
+$controllerName = $_GET['c'] ?? 'home';
+$actionName = $_GET['a'] ?? 'index';
+$id = $_GET['id'] ?? null;
 
+$controllerClass = "App\\Blog\\controllers\\" . ucfirst($controllerName) . "Controller";
 
-$user = new User("Mike","Tyson");
-
-$user->test();
-
-$user->insert();
-
-$user->name = "Kirk";
-$user->surname = 'Hemmet';
-$user->update();
-
-print_r($user);
-
-$user = User::getOne(1);
-
-print_r($user->getAll());
-
-
-
-//------------------------------------------------------------------------------------
-// запрос с условием
-//echo $user->query()->where('name','John')->get() . PHP_EOL;
-// запрос с цепочкой условий
-//echo $user->query()->where('name','John')->where('id_userType',1)->get() . PHP_EOL;
-
-// подключили библиотеку faker через composer
-//$faker = Faker\Factory::create('ru_Ru');
-//echo $faker->name() . PHP_EOL;
+if(class_exists($controllerClass))
+{
+    $controller = new $controllerClass();
+    if($id !== null)
+    {
+        $controller->runAction($actionName,$id);
+    } else
+    {
+        $controller->runAction($actionName);
+    }
+} else {
+    echo "нет такого контроллера";
+}

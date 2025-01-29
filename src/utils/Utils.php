@@ -34,4 +34,31 @@ class Utils
         }
         return $output;
     }
+
+    public static function renderTemplate($template, $params= [])
+    {
+        // определяем путь к шаблону
+        $templatePath = __DIR__ . "/../../public/views/{$template}.php";
+
+        // проверяем, существует ли файл шаблона
+        if (!file_exists($templatePath)) {
+            die("Ошибка: шаблон {$template} не найден в {$templatePath}");
+        }
+
+        // извлекаем переменные из массива $params
+        extract($params);
+
+        // включаем буферизацию вывода
+        /*Буферизация вывода в PHP используется для временного хранения (буферизации)
+        контента перед его отправкой в браузер.
+        Это позволяет манипулировать содержимым перед окончательным выводом.
+         * */
+        ob_start();
+
+        // подключаем шаблон
+        include $templatePath;
+
+        // получаем содержимое буфера и очищаем его
+        return ob_get_clean();
+    }
 }
