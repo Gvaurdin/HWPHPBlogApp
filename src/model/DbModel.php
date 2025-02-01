@@ -6,7 +6,6 @@ use App\Blog\core\Db;
 use App\Blog\Helpers;
 use App\Blog\interfaces\IModel;
 
-//TODO реализовать универсальные update, delete
 
 /**
  * @property int $id
@@ -52,13 +51,21 @@ abstract class DbModel implements IModel
 
     }
 
-    public function getAll()
+    public static function getAll()
     {
-        $sql = "SELECT * FROM {$this->getTableName()}" . PHP_EOL;
+        $table = static::getTableName();
+        $sql = "SELECT * FROM $table ORDER BY id DESC";
         return Db::getInstance()->queryAll($sql);
     }
 
-    public function insert(): DbModel
+    public function delete()
+    {
+        $tableName = static::getTableName();
+        $sql = "DELETE FROM $tableName WHERE id = :id";
+        return Db::getInstance()->execute($sql, ['id' => $this->id]);
+    }
+
+    public function insert()
     {
         $tableName = static::getTableName();
         [$fields,$placeholders,$values] = $this->prepareFieldsAndValues(false);
@@ -88,6 +95,15 @@ abstract class DbModel implements IModel
         return Db::getInstance()->execute($sql, $values)->rowCount() > 0;
     }
 
+    public function save()
+    {
+        if (is_null($this->id)) {
+            $this->insert();
+        } else {
+            $this->update();
+        }
+        return $this;
+    }
 
     protected function prepareFieldsAndValues(bool $isUpdate = false): array
     {

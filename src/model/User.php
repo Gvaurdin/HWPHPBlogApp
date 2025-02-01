@@ -6,13 +6,13 @@ use App\Blog\core\Db;
 
 class User extends Model
 {
-    protected ?int $id;
+    protected ?int $id = null;
     protected ?string $name;
     protected ?string $surname;
 
     protected ?int $id_userType;
 
-    protected $props =[
+    protected array $props =[
         'id' => false,
         'name' => false,
         'surname' => false,
@@ -23,6 +23,16 @@ class User extends Model
     {
         $this->name = $name;
         $this->surname = $surname;
+    }
+
+    public static function getName()
+    {
+        return $_SESSION['login'] ?? false;
+    }
+
+    public static function isAdmin(): bool
+    {
+        return $_SESSION['login'] === 'admin';
     }
 
     //с помощью функции test мы получаем список публичных полей класса

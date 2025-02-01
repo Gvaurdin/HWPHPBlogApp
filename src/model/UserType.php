@@ -4,10 +4,15 @@ namespace App\Blog\model;
 
 class UserType extends Model
 {
-    public int $id;
-    public string $userCategory;
+    protected ?int $id = null;
+    protected ?string $userCategory;
 
-    protected function getTableName(): string
+    protected array $props =[
+
+        'userCategory' => false,
+    ];
+
+    protected static function getTableName(): string
     {
         return 'UserTypes';
     }

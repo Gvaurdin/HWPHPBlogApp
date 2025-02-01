@@ -7,10 +7,11 @@ use App\Blog\Helpers;
 
 abstract class Model extends DbModel
 {
+    protected array $props = [];
 
     public function __get(string $name): mixed
     {
-        if(!array_key_exists($name, $this->props) || !$this->props[$name])
+        if(!array_key_exists($name, $this->props))
         {
             Helpers::errorHandle("Нельзя читать значение поля '{$name}'");
         }

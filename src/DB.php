@@ -8,7 +8,6 @@ Class DB
 {
     static function initDB(): string
     {
-        # SQLite
         $db = getDB();
         $db->query("pragma foreign_keys = on;");
         $db->query("CREATE TABLE IF NOT EXISTS UserTypes (
@@ -20,99 +19,75 @@ Class DB
     title varchar(50) NOT NULL,
     text TEXT NOT NULL,
     id_user INTEGER,
-    foreign key (id_user) references UsersController(id) on delete cascade on update cascade
+    foreign key (id_user) references Users(id) on delete cascade on update cascade
     );");
-        $db->query("CREATE TABLE IF NOT EXISTS UsersController (
+        $db->query("CREATE TABLE IF NOT EXISTS Users (
     id INTEGER PRIMARY key AUTOINCREMENT unique,
     name varchar(50) NOT NULL,
     surname varchar(50) NOT NULL,
     id_userType INTEGER,
     foreign key (id_userType) references UserTypes(id) on delete cascade on update cascade
     );");
-        return "Структура БД построена".PHP_EOL;
+        $db->query("CREATE TABLE IF NOT EXISTS Accounts (
+    id INTEGER PRIMARY key AUTOINCREMENT unique,
+    login varchar(50) NOT NULL,
+    password_hash varchar(255) NOT NULL,
+    id_userType INTEGER,
+    id_user INTEGER,
+    foreign key (id_userType) references UserTypes(id) on delete cascade on update cascade,
+    foreign key (id_user) references Users(id) on delete cascade on update cascade
+    );");
+        return "Структура БД построена" . PHP_EOL;
     }
 
     static function seedDB(): string
     {
         $db = getDB();
-//    $db->query("pragma foreign_keys = on;");
-//    $db->query("INSERT INTO UserTypes (userCategory) VALUES('Author');");
-//    $db->query("INSERT INTO UserTypes (userCategory) VALUES('User');");
-//    $db->query("INSERT INTO UserTypes (userCategory) VALUES('Admin');");
-//
-//    $db->query("INSERT INTO UsersController (name, surname, id_userType) VALUES ('John', 'Gordon',1);");
-//    $db->query("INSERT INTO UsersController (name, surname, id_userType) VALUES ('Maria', 'Shark',2);");
-//    $db->query("INSERT INTO UsersController (name, surname, id_userType) VALUES ('Mike', 'Johnson',1);");
-//
-//    $db->query("INSERT INTO POSTS (title,text,id_user) VALUES ('Sport football', 'This post about sport', 1);");
-//    $db->query("INSERT INTO POSTS (title,text,id_user) VALUES ('News world', 'This post about news of world',3);");
-//    $db->query("INSERT INTO POSTS (title,text,id_user) VALUES ('New car', 'This post about new cars',1);");
 
-        //данные для вставки
-        $userTypes = [
-            ['Author'],
-            ['User'],
-            ['Admin']
-        ];
+        // Включаем поддержку внешних ключей
+        $db->exec("PRAGMA foreign_keys = ON;");
 
-        $users = [
-            ['John','Gordon',1],
-            ['Maria','Shark',2],
-            ['Mike',"Johnson",1],
-        ];
+        // Заполняем таблицу UserTypes
+        $db->exec("
+        INSERT OR IGNORE INTO UserTypes (id, userCategory) VALUES
+        (1, 'Author'),
+        (2, 'User'),
+        (3, 'Admin');
+    ");
 
-        $posts = [
-            ['Sport football', 'This post about sport', 1],
-            ['News world', 'This post about news of world',3],
-            ['New car', 'This post about new cars',1]
-        ];
+        // Заполняем таблицу UsersController
+        $db->exec("
+        INSERT OR IGNORE INTO Users (id, name, surname, id_userType) VALUES
+        (1, 'John', 'Gordon', 1),
+        (2, 'Maria', 'Shark', 2),
+        (3, 'Mike', 'Johnson', 1);
+    ");
 
-        // вставляем данные
+        // Заполняем таблицу Posts
+        $db->exec("
+        INSERT OR IGNORE INTO Posts (id, title, text, id_user) VALUES
+        (1, 'Sport football', 'This post about sport', 1),
+        (2, 'News world', 'This post about news of world', 3),
+        (3, 'New car', 'This post about new cars', 1);
+    ");
 
-        /*
-         * команда exec используется для выполнения sql-запрсоов, которые
-         * не возравщают набор данных. Команда возрващает только кол-во строк
-         * затронутых sql запросом или 0
-         */
+        // Заполняем таблицу Accounts (пароли уже захешированы)
+        $db->exec("
+        INSERT OR IGNORE INTO Accounts (id, login, password_hash, id_userType, id_user) VALUES
+        (1, 'johng', '" . password_hash('password123', PASSWORD_DEFAULT) . "', 1, 1),
+        (2, 'mariash', '" . password_hash('mypassword', PASSWORD_DEFAULT) . "', 2, 2),
+        (3, 'mikej', '" . password_hash('securepass', PASSWORD_DEFAULT) . "', 1, 3);
+    ");
 
-        foreach ($userTypes as $type) {
-            $stmt = $db->prepare("SELECT COUNT(*) FROM UserTypes WHERE userCategory = :userCategory");
-            $stmt->execute($type);
-            if ($stmt->fetchColumn() == 0) {
-                $insert = $db->prepare("INSERT INTO UserTypes (userCategory) VALUES (:userCategory)");
-                $insert->execute($type);
-            }
-        }
-
-        foreach ($users as $user) {
-            $stmt = $db->prepare("SELECT COUNT(*) FROM UsersController WHERE name = :name AND surname = :surname AND id_userType = :id_userType");
-            $stmt->execute($user);
-            if ($stmt->fetchColumn() == 0) {
-                $insert = $db->prepare(
-                    "INSERT INTO UsersController (name, surname, id_userType) VALUES (:name, :surname, :id_userType)"
-                );
-                $insert->execute($user);
-            }
-        }
-
-        foreach ($posts as $post) {
-            $stmt = $db->prepare("SELECT COUNT(*) FROM Posts WHERE title = :title AND text = :text AND id_user = :id_user");
-            $stmt->execute($post);
-            if ($stmt->fetchColumn() == 0) {
-                $insert = $db->prepare("INSERT INTO Posts (title, text, id_user) VALUES (:title, :text, :id_user)");
-                $insert->execute($post);
-            }
-        }
-
-        return "Данные успешно внесены в БД".PHP_EOL;
+        return "Данные успешно внесены в БД" . PHP_EOL;
     }
-}
 
+}
 function getDB(): PDO
 {
     static $dbPath = __DIR__ . '/../db/sqlDB/database.db';
-    static $db =null;
-    if(is_null($db)){
+    static $db = null;
+    if (is_null($db)) {
         $db = new PDO("sqlite:" . $dbPath);
         // Устанавливаем режим выборки по умолчанию для PDO: данные будут возвращаться в виде ассоциативных массивов,
         // где ключами являются названия столбцов из базы данных. Это упрощает доступ к данным и делает код более читаемым.

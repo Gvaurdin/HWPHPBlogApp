@@ -2,26 +2,17 @@
 
 namespace App\Blog\controllers;
 
+use App\Blog\cookies\VisitCounter;
 use App\Blog\Helpers;
-use App\Blog\model\Post;
-use App\Blog\views\Home;
-class HomeController
+
+class HomeController  extends Controller
 {
-    public function runAction($action)
-    {
-        $method = 'action' . ucfirst($action);
-        if(method_exists($this, $method))
-        {
-            $this->$method();
-        } else
-        {
-            Helpers::errorHandle("Action $action not found");
-        }
-    }
 
     public function actionIndex()
     {
-        $home = new Home();
+
+        $message = $_SESSION['message'] ?? null;
+        $_SESSION['message'] = null;
         $posts = [
             [
                 'id' => 1,
@@ -38,7 +29,10 @@ class HomeController
                 'comments' => 121
             ]
         ];
-        $home->render($posts);
+        echo $this->render('home/index', [
+            'posts' => $posts,
+            'message' => $message,
+        ]);
     }
 
 }

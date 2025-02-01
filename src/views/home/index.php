@@ -114,27 +114,27 @@
              можно создать пассивный шаблон-->
             <?php if (isset($posts)) {
                 foreach ($posts as $post): ?>
-            <!--documentarty starts-->
-            <div class="document">
-                <div>&nbsp;</div>
-                <div class="dochead">
-                    <span><a href="/?c=posts&a=post&id=<?=$post['id']?>" class="dhead"><?=$post['title']?></a></span>
-                </div>
-                <div>
-                    <span class="post">posted by admin | september 3, 2009</span>
-                </div>
-                <div class="dcontent">
-                    <img src="<?=$post['image']?>" alt="" style="float: left; margin: 10px"/>
-                    <?=$post['text']?>
-                </div>
-                <div class="bubble" align="right">
-                    <span><?=$post['comments']?></span>
-                </div>
-            </div>
-            <div class="rtboxbg">&nbsp;</div>
-            <!--documentary ends-->
-            <div class="gap"></div>
-            <?php endforeach;
+                    <!--documentarty starts-->
+                    <div class="document">
+                        <div>&nbsp;</div>
+                        <div class="dochead">
+                            <span><a href="/?c=posts&a=post&id=<?=$post['id']?>" class="dhead"><?=$post['title']?></a></span>
+                        </div>
+                        <div>
+                            <span class="post">posted by admin | september 3, 2009</span>
+                        </div>
+                        <div class="dcontent">
+                            <img src="<?=$post['image']?>" alt="" style="float: left; margin: 10px"/>
+                            <?=$post['text']?>
+                        </div>
+                        <div class="bubble" align="right">
+                            <span><?=$post['comments']?></span>
+                        </div>
+                    </div>
+                    <div class="rtboxbg">&nbsp;</div>
+                    <!--documentary ends-->
+                    <div class="gap"></div>
+                <?php endforeach;
             } ?>
             <!--Helping ends-->
         </div>

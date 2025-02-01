@@ -1,13 +1,4 @@
-<?php
-
-namespace App\Blog\views;
-
-class Layout
-{
-    public static function render($content): void
-    {
-        // Начало HTML-шаблона
-        echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -33,12 +24,9 @@ class Layout
         // Дополнительный JavaScript для старых версий IE можно оставить здесь.
     </script>
 </head>
-<body>';
+<body>
+        <?=$menu?>
+        <?=$content?>
+</body>
+</html>;
 
-        // Здесь выводим переданный контент (страницу)
-        echo $content;
-
-        // Закрытие основного шаблона
-        echo '</body></html>';
-    }
-}
