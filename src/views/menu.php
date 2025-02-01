@@ -1,6 +1,6 @@
 <?php if($user): ?>
     <p>Привет <?= $user ?> (Роль: <?= $_SESSION['userType'] ?>), <a href="/?c=auth&a=logout">Выйти</a></p>
-    <p>Вы посетили сайт <?= $_COOKIE['visitCount' . $user] ?? 1 ?> раз(а)</p>
+    <p>Вы зашли в свой аккаунт <?= $_COOKIE['visitCount' . $user] ?? 1 ?> раз(а)</p>
     <br>
     <?php if($_SESSION['userType'] == 'Admin'): ?>
          <a href="/">Главная</a>
